@@ -20,8 +20,8 @@ from sklearn.preprocessing import Imputer
 imputer = Imputer(missing_values ="NaN", strategy="mean",axis = 0 )
 dataset[:,3:] = imputer.fit_transform(dataset[:,3:])
 
-#Feature scaling
 
+#Categorical features
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 
 le = LabelEncoder()
@@ -32,14 +32,11 @@ dataset = onehotencoder.fit_transform(dataset).toarray()
 x = dataset[:,:195]
 x = np.append(x,dataset[:,196:215],axis = 1)
 y = dataset[:,195]
-#Training set test set
 x=x[:, 1:]
 
-
+#Backward Elimination
 import statsmodels.formula.api as sm
-
 np.append(np.ones((2938,1)).astype(int),values = x,axis = 1)
-
 def backwardElimination(x, sl):
     numVars = len(x[0])
     for i in range(0, numVars):
@@ -57,16 +54,16 @@ X_Modeled = backwardElimination(x, SL)
 x= X_Modeled
 
 
+#Training set test set
 from sklearn.cross_validation import train_test_split
-
 x_train, x_test, y_train, y_test = train_test_split(x,y, test_size=0.2,random_state=0)
 
+
 from sklearn.linear_model import LinearRegression
-
-lr = LinearRegression();
+lr = LinearRegression()
 lr.fit(x_train,y_train)
-
-
 y_pred = lr.predict(x_test)
 accuracy = lr.score(x_test,y_test)
 print(accuracy)
+
+
